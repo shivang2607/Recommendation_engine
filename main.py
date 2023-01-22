@@ -56,7 +56,7 @@ def recommend(input:title):
 @app.post('/movies')
 def recommend(input:title):
     input = input.names
-    input = [x.strip() for x in (input.lower()).split('|')]
+    input = (input.lower()).split('|')
         
     
     samples=[]
