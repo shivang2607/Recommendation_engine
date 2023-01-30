@@ -3,7 +3,7 @@
 import pandas as pd
 import json
 import joblib
-from fastapi import FastAPI
+from fastapi import FastAPI, Response
 from pydantic import BaseModel
 from fastapi.middleware.cors import CORSMiddleware
 
@@ -60,7 +60,7 @@ def recommend(input:title):
         results = anime.loc[indices_cos.squeeze()[0:]]
         results.drop(['Japanese'], axis=1, inplace=True)
         results['Distances'] = distances_cos.squeeze()[0:]
-        return json.loads(results.to_json(orient='records'))
+        return  Response(results.to_json(orient="records"), media_type="application/json")
     
     else:
         samples=[]
@@ -71,7 +71,7 @@ def recommend(input:title):
         results = anime.loc[indices_cos_comb.squeeze()[0:]]
         results.drop(['Japanese'], axis=1, inplace=True)
         results['Distances'] = distances_cos_comb.squeeze()[0:]
-        return json.loads(results.to_json(orient='records'))
+        return  Response(results.to_json(orient="records"), media_type="application/json")
 
 
 
@@ -88,7 +88,7 @@ def recommend(input:title):
     distances_movies, indices_movies = movies_model.kneighbors([sample_mean])
     results = movies.loc[indices_movies.squeeze()]
     results['Distances'] = distances_movies.squeeze()
-    return json.loads(results.to_json(orient='records'))
+    return  Response(results.to_json(orient="records"), media_type="application/json")
 
 
 @app.post('/tvseries')
@@ -98,4 +98,4 @@ def recommend(input:title):
     distances_cos_comb, indices_cos_comb = K_model_tf.kneighbors([sample])
     results = tvseries.loc[indices_cos_comb.squeeze()[0:]]
     results['Distances'] = distances_cos_comb.squeeze()[0:]
-    return json.loads(results.to_json(orient='records'))
+    return  Response(results.to_json(orient="records"), media_type="application/json")
