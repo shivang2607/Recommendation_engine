@@ -55,7 +55,7 @@ def recommend(input:title):
     input = (input.lower()).split('|')
 
     if len(input)==1:           
-        sample = train.toarray()[anime.index[anime['English'].str.lower().str.contains(input[0])]][0]
+        sample = train.toarray()[anime.index[anime['English'].str.lower()==input[0]]][0]
         distances_cos, indices_cos = K_model_cos.kneighbors([sample])
         results = anime.loc[indices_cos.squeeze()[0:]]
         results.drop(['Japanese'], axis=1, inplace=True)
@@ -65,7 +65,7 @@ def recommend(input:title):
     else:
         samples=[]
         for name in input:
-            samples.append(train_combined.toarray()[anime.index[anime['English'].str.lower().str.contains(name)]][0])
+            samples.append(train_combined.toarray()[anime.index[anime['English'].str.lower()==name]][0])
         sample_mean = [sum(sub_list) / len(sub_list) for sub_list in zip(*samples)]
         distances_cos_comb, indices_cos_comb = K_combined_cos.kneighbors([sample_mean])
         results = anime.loc[indices_cos_comb.squeeze()[0:]]
