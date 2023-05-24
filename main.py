@@ -42,7 +42,7 @@ movies_model = joblib.load('model_movies.sav')
 
 mangac=pd.read_parquet('manga.parquet')
 pipeline = joblib.load('preprocess_pipeline_manga.sav')
-K_model_cos=joblib.load('K_model_manga.sav')
+K_model_manga=joblib.load('K_model_manga.sav')
 
 class title(BaseModel):
     names:str
@@ -103,7 +103,7 @@ def recommend(input:title):
     for name in input:
         samples.append((pipeline.transform(mangac[mangac['title'].apply(lambda x:name.strip() in x.lower())][:1])).toarray())    
     sample_mean = [sum(sub_list) / len(sub_list) for sub_list in zip(*samples)]             
-    distances_cos_comb, indices_cos_comb = K_model_cos.kneighbors(sample_mean)       
+    distances_cos_comb, indices_cos_comb = K_model_manga.kneighbors(sample_mean)       
     results = mangac.iloc[indices_cos_comb.squeeze()[0:]]
     results['Distances'] = distances_cos_comb.squeeze()[0:]
     return Response(results.to_json(orient='records'), media_type="application/json")
