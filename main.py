@@ -58,6 +58,7 @@ async def main():
 def recommend(input:title):
     input = input.names
     input = (input.lower()).split('|')
+    print(input)
 
     if len(input)==1:           
         sample = train.toarray()[anime.index[anime['English'].str.lower()==input[0]]][0]
